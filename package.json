@@ -1,0 +1,16 @@
+{
+  "name": "babel-plugin-transform-styled-components-remove-prop-types",
+  "version": "0.0.0",
+  "description": "Remove unnecessary React propTypes from styled-components",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "babel",
+    "plugin",
+    "styled-components"
+  ],
+  "author": "Mark Chandler",
+  "license": "MIT"
+}
