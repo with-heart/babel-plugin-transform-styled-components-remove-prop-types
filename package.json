@@ -6,7 +6,11 @@
   "scripts": {
     "test": "jest"
   },
-  "keywords": ["babel", "plugin", "styled-components"],
+  "keywords": [
+    "babel",
+    "plugin",
+    "styled-components"
+  ],
   "author": "Mark Chandler",
   "license": "MIT",
   "devDependencies": {
