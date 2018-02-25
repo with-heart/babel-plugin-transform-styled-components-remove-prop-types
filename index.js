@@ -7,25 +7,12 @@ module.exports = function({ types: t }) {
     name: 'babel-plugin-transform-styled-components-remove-prop-types',
     visitor: {
       Program(path) {
-        const { scope } = path;
-
         if (!hasPropTypesImport(path)) {
           return;
         }
 
-        const styledImportName = findStyledComponentsImportName(path);
-
-        if (!styledImportName) {
-          return;
-        }
-
-        const styledBinding = scope.bindings[styledImportName];
-        const styledReferences = styledBinding.referencePaths;
-        const referenceNames = styledReferences
-          .map(findStyledVariableReferences)
-          .filter(Boolean);
-
-        removePropTypesForReferences(path, referenceNames);
+        handleStyledComponents(path);
+        handleExtendedComponents(path);
       },
     },
   };
@@ -46,6 +33,30 @@ function hasPropTypesImport(path) {
   });
 
   return found;
+}
+
+function handleStyledComponents(path) {
+  const { scope } = path;
+  const styledImportName = findStyledComponentsImportName(path);
+
+  if (!styledImportName) {
+    return;
+  }
+
+  const binding = scope.getBinding(styledImportName);
+  const referenceNames = binding.referencePaths
+    .map(findStyledVariableReferences)
+    .filter(Boolean);
+
+  removePropTypesForReferences(path, referenceNames);
+}
+
+function handleExtendedComponents(path) {
+  const { scope } = path;
+
+  const names = findExtendedNames(path);
+
+  removePropTypesForReferences(path, names);
 }
 
 function findStyledComponentsImportName(path) {
@@ -75,6 +86,23 @@ function findStyledVariableReferences(path) {
   const variable = path.findParent(t.isVariableDeclarator);
 
   return variable.node.id.name;
+}
+
+function findExtendedNames(path) {
+  const names = new Set();
+
+  path.traverse({
+    Identifier(path) {
+      if (path.node.name !== 'extend') {
+        return;
+      }
+
+      const variable = path.findParent(t.isVariableDeclarator);
+      names.add(variable.node.id.name);
+    },
+  });
+
+  return Array.from(names);
 }
 
 function removePropTypesForReferences(path, names) {
