@@ -11,8 +11,18 @@ module.exports = function({ types: t }) {
           return;
         }
 
-        handleStyledComponents(path);
-        handleExtendedComponents(path);
+        const { scope } = path;
+        const styledImportName = findImportName(path);
+        const styledBinding = scope.getBinding(styledImportName);
+        const styledReferenceNames = styledBinding.referencePaths
+          .map(findStyledReferenceName)
+          .filter(Boolean);
+        const extendedNames = findExtendedNames(path);
+
+        removePropTypesForReferences(
+          path,
+          styledReferenceNames.concat(extendedNames)
+        );
       },
     },
   };
@@ -35,31 +45,7 @@ function hasPropTypesImport(path) {
   return found;
 }
 
-function handleStyledComponents(path) {
-  const { scope } = path;
-  const styledImportName = findStyledComponentsImportName(path);
-
-  if (!styledImportName) {
-    return;
-  }
-
-  const binding = scope.getBinding(styledImportName);
-  const referenceNames = binding.referencePaths
-    .map(findStyledVariableReferences)
-    .filter(Boolean);
-
-  removePropTypesForReferences(path, referenceNames);
-}
-
-function handleExtendedComponents(path) {
-  const { scope } = path;
-
-  const names = findExtendedNames(path);
-
-  removePropTypesForReferences(path, names);
-}
-
-function findStyledComponentsImportName(path) {
+function findImportName(path) {
   let name;
 
   path.traverse({
@@ -78,7 +64,7 @@ function findStyledComponentsImportName(path) {
   return name;
 }
 
-function findStyledVariableReferences(path) {
+function findStyledReferenceName(path) {
   if (!t.isMemberExpression(path.parent)) {
     return;
   }
