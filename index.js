@@ -65,7 +65,7 @@ function findImportName(path) {
 }
 
 function findStyledReferenceName(path) {
-  if (!t.isMemberExpression(path.parent)) {
+  if (!t.isMemberExpression(path.parent) && !t.isCallExpression(path.parent)) {
     return;
   }
 
