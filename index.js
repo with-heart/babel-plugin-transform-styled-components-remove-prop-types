@@ -96,12 +96,11 @@ function removePropTypesForReferences(path, names) {
     Identifier(path) {
       const { node } = path;
 
-      if (node.name !== 'propTypes') {
+      if (node.name !== 'propTypes' || !t.isMemberExpression(path.parent)) {
         return;
       }
 
-      const expressionIdentifier = path.findParent(t.isMemberExpression).node
-        .object.name;
+      const expressionIdentifier = path.parent.object.name;
       if (!names.includes(expressionIdentifier)) {
         return;
       }
