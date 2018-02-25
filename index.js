@@ -7,7 +7,7 @@ module.exports = function({ types: t }) {
     name: 'babel-plugin-transform-styled-components-remove-prop-types',
     visitor: {
       Program(path) {
-        if (!hasPropTypesImport(path)) {
+        if (!hasPropTypes(path)) {
           return;
         }
 
@@ -28,7 +28,7 @@ module.exports = function({ types: t }) {
   };
 };
 
-function hasPropTypesImport(path) {
+function hasPropTypes(path) {
   let found = false;
 
   path.traverse({
@@ -38,6 +38,15 @@ function hasPropTypesImport(path) {
 
       if (importSource === 'prop-types') {
         found = true;
+        path.stop();
+      }
+    },
+    Identifier(path) {
+      const { node } = path;
+
+      if (node.name === 'propTypes' && t.isMemberExpression(path.parent)) {
+        found = true;
+        path.stop();
       }
     },
   });
