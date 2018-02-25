@@ -6,13 +6,20 @@
   "scripts": {
     "test": "jest"
   },
-  "keywords": [
-    "babel",
-    "plugin",
-    "styled-components"
-  ],
+  "keywords": ["babel", "plugin", "styled-components"],
   "author": "Mark Chandler",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url":
+      "https://github.com/lionize/babel-plugin-transform-styled-components-remove-prop-types.git"
+  },
+  "readme":
+    "https://github.com/lionize/babel-plugin-transform-styled-components-remove-prop-types",
+  "homepage":
+    "https://github.com/lionize/babel-plugin-transform-styled-components-remove-prop-types",
+  "bugs":
+    "https://github.com/lionize/babel-plugin-transform-styled-components-remove-prop-types/issues",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-plugin-tester": "^5.0.0",
