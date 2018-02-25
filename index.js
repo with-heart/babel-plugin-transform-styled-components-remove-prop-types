@@ -1,8 +1,6 @@
-const fs = require('fs');
-const util = require('util');
 const { types: t } = require('babel-core');
 
-module.exports = function({ types: t }) {
+module.exports = function() {
   return {
     name: 'babel-plugin-transform-styled-components-remove-prop-types',
     visitor: {
